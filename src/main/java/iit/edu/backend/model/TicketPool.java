@@ -13,9 +13,15 @@ public class TicketPool {
     private int maxTicketCapacity;
     private int currentCount;
 
-    private final JsonFileHandler jsonFileHandler;
+    // Make jsonFileHandler non-final
+    private JsonFileHandler jsonFileHandler;
 
-    // Constructor where we inject the JsonFileHandler
+    // Default constructor required for Jackson deserialization
+    public TicketPool() {
+        // Default constructor for Jackson to instantiate the object
+    }
+
+    // Constructor where we inject the JsonFileHandler (for Spring DI)
     public TicketPool(JsonFileHandler jsonFileHandler) {
         this.jsonFileHandler = jsonFileHandler;
         loadData(); // Load data from JSON file on startup
@@ -81,30 +87,30 @@ public class TicketPool {
         notifyAll(); // Notify vendors that they can add tickets
     }
 
- // Getter and Setter methods
- public int getTicketCount() {
-    return ticketCount;
-}
+    // Getter and Setter methods
+    public int getTicketCount() {
+        return ticketCount;
+    }
 
-public void setTicketCount(int ticketCount) {
-    this.ticketCount = ticketCount;
-}
+    public void setTicketCount(int ticketCount) {
+        this.ticketCount = ticketCount;
+    }
 
-public int getMaxTicketCapacity() {
-    return maxTicketCapacity;
-}
+    public int getMaxTicketCapacity() {
+        return maxTicketCapacity;
+    }
 
-public void setMaxTicketCapacity(int maxTicketCapacity) {
-    this.maxTicketCapacity = maxTicketCapacity;
-}
+    public void setMaxTicketCapacity(int maxTicketCapacity) {
+        this.maxTicketCapacity = maxTicketCapacity;
+    }
 
-public int getCurrentCount() {
-    return currentCount;
-}
+    public int getCurrentCount() {
+        return currentCount;
+    }
 
-public void setCurrentCount(int currentCount) {
-    this.currentCount = currentCount;
-}
+    public void setCurrentCount(int currentCount) {
+        this.currentCount = currentCount;
+    }
 
-// Other methods for adding and removing tickets...
+
 }
