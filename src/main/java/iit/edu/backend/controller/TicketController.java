@@ -1,37 +1,51 @@
 package iit.edu.backend.controller;
 
 import iit.edu.backend.model.TicketPool;
-import iit.edu.backend.service.CustomerService;
-import iit.edu.backend.service.VendorService;
+import iit.edu.backend.model.TicketConfig;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 @RestController
 @RequestMapping("/api/tickets")
 public class TicketController {
 
     private final TicketPool ticketPool;
-    private final VendorService vendorService;
-    private final CustomerService customerService;
 
-    // Constructor to inject dependencies
-    public TicketController(TicketPool ticketPool, VendorService vendorService, CustomerService customerService) {
+    // Inject TicketPool via constructor
+    @Autowired
+    public TicketController(TicketPool ticketPool) {
         this.ticketPool = ticketPool;
-        this.vendorService = vendorService;
-        this.customerService = customerService;
     }
 
-    // Endpoint to configure ticket pool with ticketCount and maxCapacity
+    // Configure the ticket system with the given configuration (Total Tickets and Max Capacity)
     @PostMapping("/configure")
-    public String configureSystem(@RequestParam int ticketCount, @RequestParam int maxCapacity) {
-        ticketPool.configure(ticketCount, maxCapacity); // Call the configure method in TicketPool
-        return "System Configured"; // Return success message
+    public String configureSystem(@RequestBody TicketConfig config) {
+        // Configure the ticket pool with provided settings
+        ticketPool.configure(config.getTotalTickets(), config.getMaxTicketCapacity());
+        return "System Configured with " + config.getTotalTickets() + " tickets and " + config.getMaxTicketCapacity() + " max capacity.";
     }
 
-    // Endpoint to start ticketing by releasing and purchasing tickets
+    // Start the ticket system process
     @PostMapping("/start")
-    public String startTicketing(@RequestParam int vendorRate, @RequestParam int customerRate) {
-        vendorService.releaseTickets(vendorRate); // Vendor releases tickets
-        customerService.purchaseTickets(customerRate); // Customer purchases tickets
-        return "Ticketing Started"; // Return success message
+    public String startSystem() {
+        ticketPool.startTicketProcess();  // Start processing tickets in the pool
+        return "Ticket System Started.";
     }
+
+    // Stop the ticket system process
+    @PostMapping("/stop")
+    public String stopSystem() {
+        ticketPool.stopTicketProcess();  // Stop processing tickets in the pool
+        return "Ticket System Stopped.";
+    }
+
+    // Get the current logs of the ticket system
+    @GetMapping("/logs")
+    public List<String> getLogs() {
+        return ticketPool.getLogs();  // Return logs for display in frontend
+    }
+
+    // Additional API endpoints (e.g., to retrieve current status, ticket counts, etc.) can be added here if needed
 }
