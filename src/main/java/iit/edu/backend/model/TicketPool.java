@@ -13,7 +13,6 @@ public class TicketPool {
     private int maxTicketCapacity;
     private int currentCount;
 
-    // Make jsonFileHandler non-final
     private JsonFileHandler jsonFileHandler;
 
     // Default constructor required for Jackson deserialization
@@ -29,21 +28,29 @@ public class TicketPool {
 
     // Load the ticket pool data from the JSON file
     private void loadData() {
-        // Correcting the deserialization to map properly to TicketPool
-        List<TicketPool> pools = jsonFileHandler.readData(new TypeReference<List<TicketPool>>() {});
-        if (!pools.isEmpty()) {
-            TicketPool savedPool = pools.get(0); // Assuming a single pool
-            this.ticketCount = savedPool.ticketCount;
-            this.maxTicketCapacity = savedPool.maxTicketCapacity;
-            this.currentCount = savedPool.currentCount;
+        if (jsonFileHandler != null) {
+            List<TicketPool> pools = jsonFileHandler.readData(new TypeReference<List<TicketPool>>() {});
+            if (!pools.isEmpty()) {
+                TicketPool savedPool = pools.get(0); // Assuming a single pool
+                this.ticketCount = savedPool.ticketCount;
+                this.maxTicketCapacity = savedPool.maxTicketCapacity;
+                this.currentCount = savedPool.currentCount;
+            }
+        } else {
+            // If jsonFileHandler is null, initialize default values (add error handling)
+            this.ticketCount = 0;
+            this.maxTicketCapacity = 0;
+            this.currentCount = 0;
         }
     }
 
     // Save the ticket pool data back to the JSON file
     private void saveData() {
-        List<TicketPool> pools = new ArrayList<>();
-        pools.add(this);
-        jsonFileHandler.writeData(pools);
+        if (jsonFileHandler != null) {
+            List<TicketPool> pools = new ArrayList<>();
+            pools.add(this);
+            jsonFileHandler.writeData(pools);
+        }
     }
 
     // Configure the ticket count and max capacity
@@ -111,6 +118,4 @@ public class TicketPool {
     public void setCurrentCount(int currentCount) {
         this.currentCount = currentCount;
     }
-
-
 }
