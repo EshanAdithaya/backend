@@ -1,6 +1,7 @@
 package iit.edu.backend.model;
 
 import iit.edu.backend.util.JsonFileHandler;
+import com.fasterxml.jackson.core.type.TypeReference;
 import org.springframework.stereotype.Component;
 
 import java.util.ArrayList;
@@ -14,6 +15,7 @@ public class TicketPool {
 
     private final JsonFileHandler jsonFileHandler;
 
+    // Constructor where we inject the JsonFileHandler
     public TicketPool(JsonFileHandler jsonFileHandler) {
         this.jsonFileHandler = jsonFileHandler;
         loadData(); // Load data from JSON file on startup
@@ -21,7 +23,8 @@ public class TicketPool {
 
     // Load the ticket pool data from the JSON file
     private void loadData() {
-        List<TicketPool> pools = jsonFileHandler.readData(TicketPool.class);
+        // Correcting the deserialization to map properly to TicketPool
+        List<TicketPool> pools = jsonFileHandler.readData(new TypeReference<List<TicketPool>>() {});
         if (!pools.isEmpty()) {
             TicketPool savedPool = pools.get(0); // Assuming a single pool
             this.ticketCount = savedPool.ticketCount;
@@ -78,28 +81,30 @@ public class TicketPool {
         notifyAll(); // Notify vendors that they can add tickets
     }
 
-    // Getter and Setter methods
-    public int getTicketCount() {
-        return ticketCount;
-    }
+ // Getter and Setter methods
+ public int getTicketCount() {
+    return ticketCount;
+}
 
-    public void setTicketCount(int ticketCount) {
-        this.ticketCount = ticketCount;
-    }
+public void setTicketCount(int ticketCount) {
+    this.ticketCount = ticketCount;
+}
 
-    public int getMaxTicketCapacity() {
-        return maxTicketCapacity;
-    }
+public int getMaxTicketCapacity() {
+    return maxTicketCapacity;
+}
 
-    public void setMaxTicketCapacity(int maxTicketCapacity) {
-        this.maxTicketCapacity = maxTicketCapacity;
-    }
+public void setMaxTicketCapacity(int maxTicketCapacity) {
+    this.maxTicketCapacity = maxTicketCapacity;
+}
 
-    public int getCurrentCount() {
-        return currentCount;
-    }
+public int getCurrentCount() {
+    return currentCount;
+}
 
-    public void setCurrentCount(int currentCount) {
-        this.currentCount = currentCount;
-    }
+public void setCurrentCount(int currentCount) {
+    this.currentCount = currentCount;
+}
+
+// Other methods for adding and removing tickets...
 }

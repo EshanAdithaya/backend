@@ -10,7 +10,6 @@ import java.util.List;
 
 @Component
 public class JsonFileHandler {
-
     private final ObjectMapper objectMapper;
     private final String jsonFilePath = "data/ticket-data.json"; // Path where data will be stored
 
@@ -29,9 +28,9 @@ public class JsonFileHandler {
     }
 
     // Read data from the JSON file
-    public <T> List<T> readData(Class<T> type) {
+    public <T> List<T> readData(TypeReference<List<T>> typeReference) {
         try {
-            return objectMapper.readValue(new File(jsonFilePath), new TypeReference<List<T>>() {});
+            return objectMapper.readValue(new File(jsonFilePath), typeReference);
         } catch (IOException e) {
             e.printStackTrace();
             return List.of(); // Return empty list in case of error
