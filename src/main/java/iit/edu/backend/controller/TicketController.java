@@ -9,7 +9,7 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/api/tickets")
-@CrossOrigin(origins = "http://192.168.8.100:3001") // Allow React app to connect to this endpoint
+@CrossOrigin(origins = "http://localhost:3001") // Allow React app to access this API
 public class TicketController {
 
     private final TicketPool ticketPool;
